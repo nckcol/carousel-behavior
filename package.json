@@ -1,0 +1,25 @@
+{
+  "name": "carousel-behavior",
+  "version": "0.1.0",
+  "description": "React component that takes care of carousel behavior and uses UI that you define",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nckcol/carousel-behavior.git"
+  },
+  "keywords": [
+    "carousel",
+    "react",
+    "component",
+    "behavior",
+    "primitive"
+  ],
+  "author": "Nick Popov <nckcol@gmail.com> (http://nckcol.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nckcol/carousel-behavior/issues"
+  },
+  "homepage": "https://github.com/nckcol/carousel-behavior#readme"
+}
