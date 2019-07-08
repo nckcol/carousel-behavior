@@ -1,0 +1,30 @@
+{
+  "dist/index.js": {
+    "bundled": 11165,
+    "minified": 6269,
+    "gzipped": 2057,
+    "treeshaked": {
+      "rollup": {
+        "code": 51,
+        "import_statements": 14
+      },
+      "webpack": {
+        "code": 6755
+      }
+    }
+  },
+  "esm/index.js": {
+    "bundled": 10155,
+    "minified": 5692,
+    "gzipped": 1855,
+    "treeshaked": {
+      "rollup": {
+        "code": 66,
+        "import_statements": 14
+      },
+      "webpack": {
+        "code": 6210
+      }
+    }
+  }
+}

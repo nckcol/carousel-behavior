@@ -1,0 +1,79 @@
+.Carousel {
+  max-width: 600px;
+  margin: 0 auto;
+  border: 4px solid #efefef;
+  overflow: hidden;
+  padding-top: 4px
+}
+
+.Carousel-slide {
+  font-size: 60px;
+  text-align: center;
+  height: 246px;
+  line-height: 246px;
+  color: #fff;
+  border-left: 4px solid #fff;
+  border-right: 4px solid #fff;
+}
+
+.Carousel-slide:nth-child(8n + 1) {
+  background-color: #ec407a;
+}
+
+.Carousel-slide:nth-child(8n + 2) {
+  background-color: #ab47bc;
+}
+
+.Carousel-slide:nth-child(8n + 3) {
+  background-color: #7e57c2;
+}
+
+.Carousel-slide:nth-child(8n + 4) {
+  background-color: #5c6bc0;
+}
+
+.Carousel-slide:nth-child(8n + 5) {
+  background-color: #29b6f6;
+}
+
+.Carousel-slide:nth-child(8n + 6) {
+  background-color: #26a69a;
+}
+
+.Carousel-slide:nth-child(8n + 7) {
+  background-color: #d4e157;
+}
+
+.Carousel-slide:nth-child(8n) {
+  background-color: #ef5350;
+}
+
+.Carousel-controls {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px;
+}
+
+.Carousel-button {
+  font-size: 20px;
+  background: none;
+  border: none;
+  appearance: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 3px;
+  background-color: #f3f3f3;
+  outline: none;
+}
+
+.Carousel-button:focus {
+  box-shadow: 0 0 0 2px #29b6f6
+}
+
+.Carousel-button:hover {
+  background-color: #fff;
+}
+
+.Carousel-button:active {
+  background-color: #c9eeff;
+}
