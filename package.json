@@ -4,7 +4,8 @@
   "description": "React component that takes care of carousel behavior and uses UI that you define",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "watch": "rollup -cw"
   },
   "repository": {
     "type": "git",

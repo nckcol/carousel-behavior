@@ -2,11 +2,26 @@ import React, {Component} from 'react';
 import {CarouselBehavior} from '../../esm/index.js';
 import './Carousel.css';
 
-function getTransitionStyle(isMoving, duration = 300, easing = 'ease-out') {
-  const transition = `transform ${duration}ms ${easing}`;
-  const mousedownTransition = `transform 0ms ${easing}`;
+const colors = [
+  '#ec407a',
+  '#ab47bc',
+  '#7e57c2',
+  '#5c6bc0',
+  '#29b6f6',
+  '#26a69a',
+  '#d4e157',
+  '#ef5350',
+];
 
-  return isMoving ? mousedownTransition : transition;
+function getColorByNumber(number) {
+  return colors[number % colors.length];
+}
+
+function getTransitionStyle(animate, duration = 200, easing = 'ease-out') {
+  const transition = `transform ${duration}ms ${easing}`;
+  const noTransition = `transform 0ms ${easing}`;
+
+  return animate ? transition : noTransition;
 }
 
 function getTransformStyle(position) {
@@ -17,9 +32,9 @@ function getCursorStyle(isMoving) {
   return isMoving ? '-webkit-grabbing' : '-webkit-grab';
 }
 
-function getContainerStyles({position, fullWidth, isMoving}) {
+function getContainerStyles({position, draft, fullWidth, isMoving}) {
   const transform = getTransformStyle(position);
-  const transition = getTransitionStyle(isMoving);
+  const transition = getTransitionStyle(!draft && !isMoving);
   const cursor = getCursorStyle(isMoving);
 
   return {
@@ -43,7 +58,7 @@ function getSlideStyle({slideWidth}) {
 
 const numberList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 const slidesCount = numberList.length;
-const slidesPerPage = 2;
+const slidesPerPage = 3;
 
 class Carousel extends Component {
   state = {
@@ -54,14 +69,26 @@ class Carousel extends Component {
 
   render() {
     const {containerWidth} = this.state;
+    const {showReplacement, isInfinite} = this.props;
 
     return (
       <CarouselBehavior
-        slidesCount={slidesCount}
         slidesPerPage={slidesPerPage}
         containerWidth={containerWidth}
-        render={({position, fullWidth, isMoving, containerHandlers, nextPage, previousPage}) => {
+        infinite={isInfinite}
+        items={numberList}
+        render={({
+          position,
+          slides,
+          draft,
+          fullWidth,
+          isMoving,
+          containerHandlers,
+          nextPage,
+          previousPage,
+        }) => {
           const containerStyle = getContainerStyles({
+            draft,
             position,
             fullWidth,
             isMoving,
@@ -69,6 +96,7 @@ class Carousel extends Component {
           const slideStyle = getSlideStyle({
             slideWidth: `${100 / slidesCount}%`,
           });
+
           return (
             <div className="Carousel">
               <div
@@ -77,8 +105,15 @@ class Carousel extends Component {
                 ref={this.containerRef}
                 {...containerHandlers}
               >
-                {numberList.map((number) => (
-                  <div key={number} style={slideStyle} className="Carousel-slide">
+                {slides.map((number, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      ...slideStyle,
+                      backgroundColor: getColorByNumber(showReplacement ? index : number),
+                    }}
+                    className="Carousel-slide"
+                  >
                     {number}
                   </div>
                 ))}
@@ -87,7 +122,7 @@ class Carousel extends Component {
                 <button className="Carousel-button" type="button" onClick={() => previousPage()}>
                   Previous
                 </button>
-              
+
                 <button className="Carousel-button" type="button" onClick={() => nextPage()}>
                   Next
                 </button>

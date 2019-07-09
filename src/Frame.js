@@ -44,6 +44,46 @@ class Frame extends Component {
     dragging: false,
   };
 
+
+  render() {
+    const {currentPage, changePage, nextPage, previousPage, render, draft, slidesCount} = this.props;
+
+    const slides = this.cloneSlides();
+    const position = this.getPosition();
+    const fullWidth = this.getFullWidth();
+    const isMoving = this.isDragAllowed();
+    const instantPage = this.getCurrentPage() % slidesCount;
+    const normalCurrentPage = (currentPage + slidesCount) % slidesCount;
+
+    const containerHandlers = {
+      onTouchStart: this.handleTouchStart,
+      onTouchEnd: this.handleTouchEnd,
+      onTouchMove: this.handleTouchMove,
+      onMouseDown: this.handleMouseDown,
+      onMouseUp: this.handleMouseUp,
+      onMouseLeave: this.handleMouseLeave,
+      onMouseMove: this.handleMouseMove,
+      onClickCapture: this.handleClickCapture,
+      onDragStart: this.handleDragStart,
+    };
+
+    return render({
+      slides,
+      position,
+      fullWidth,
+      isMoving,
+      draft,
+      instantPage,
+      currentPage: normalCurrentPage,
+      /* actions */
+      changePage,
+      nextPage,
+      previousPage,
+      /* handlers */
+      containerHandlers,
+    });
+  }
+
   componentDidMount() {
     if (!window) {
       return;
@@ -102,6 +142,22 @@ class Frame extends Component {
     return !this.state.scrolling && this.isMouseDown();
   }
 
+  getStartFakeItemsNumber() {
+    const {infinite} = this.props;
+    if (!infinite) {
+      return 0;
+    }
+    return 1;
+  }
+
+  getEndFakeItemsNumber() {
+    const {infinite, slidesPerPage} = this.props;
+    if (!infinite) {
+      return 0;
+    }
+    return slidesPerPage - this.getStartFakeItemsNumber() + 1;
+  }
+
   getItemWidth() {
     const {containerWidth, slidesPerPage} = this.props;
     return containerWidth / slidesPerPage;
@@ -125,8 +181,18 @@ class Frame extends Component {
   }
 
   getSafePageOffset() {
-    const movement = this.getMovement();
+    // const {currentPage, slidesCount} = this.props;
+
     const itemWidth = this.getItemWidth();
+    // const defaultOffset = currentPage * itemWidth;
+
+    // const position = this.getPosition();
+    // const loopWidth = itemWidth * (slidesCount - 2);
+    // console.log(defaultOffset, position);
+
+    // const movement = ((position - defaultOffset) + loopWidth) % loopWidth ;
+
+    const movement = this.getMovement();
 
     const relativeSafeZone = SAFE_ZONE / itemWidth;
 
@@ -145,10 +211,14 @@ class Frame extends Component {
   }
 
   getPosition() {
-    const {containerWidth, currentPage} = this.props;
+    const {slidesPerPage, currentPage, infinite} = this.props;
 
     const itemWidth = this.getItemWidth();
-    const offset = currentPage * itemWidth;
+
+    const startFakeItemsNumber = this.getStartFakeItemsNumber();
+    const endFakeItemsNumber = this.getEndFakeItemsNumber();
+
+    const offset = (startFakeItemsNumber + currentPage) * itemWidth;
 
     if (!this.isDragAllowed()) {
       return offset;
@@ -156,20 +226,43 @@ class Frame extends Component {
 
     const {slidesCount} = this.props;
 
-    const workWidth = itemWidth * slidesCount - containerWidth;
-
-    const startEasing = makeStartEasing();
-    const endEasing = makeEndEasing(workWidth);
+    const workWidth = infinite
+      ? itemWidth * slidesCount
+      : itemWidth * (slidesCount - slidesPerPage);
 
     const movement = this.getMovement();
     const position = offset + movement;
 
-    if (position < 0) {
-      return startEasing(position);
+    if (!infinite) {
+      const startEasing = makeStartEasing();
+      const endEasing = makeEndEasing(workWidth);
+
+      if (position < 0) {
+        return startEasing(position);
+      }
+
+      if (position > workWidth) {
+        return endEasing(position);
+      }
+
+      return position;
     }
 
-    if (position > workWidth) {
-      return endEasing(position);
+    const direction = Math.sign(movement);
+    const minPosition = direction < 0 ? itemWidth - SAFE_ZONE : SAFE_ZONE;
+    const maxPosition = workWidth + minPosition;
+    const loopWidth = itemWidth * slidesCount;
+
+    return this.infinitizePosition(position, minPosition, maxPosition, loopWidth);
+  }
+
+  infinitizePosition(position, minPosition, maxPosition, loopWidth) {
+    if (position < minPosition) {
+      return this.infinitizePosition(position + loopWidth, minPosition, maxPosition, loopWidth);
+    }
+
+    if (position > maxPosition) {
+      return this.infinitizePosition(position - loopWidth, minPosition, maxPosition, loopWidth);
     }
 
     return position;
@@ -235,14 +328,32 @@ class Frame extends Component {
     return this.state.mousedown;
   }
 
+  getPrependedSlides() {
+    const {items} = this.props;
+    const startFakeItemsNumber = this.getStartFakeItemsNumber();
+    if (startFakeItemsNumber <= 0) {
+      return [];
+    }
+    return items.slice(-startFakeItemsNumber);
+  }
+
+  getAppendedSlides() {
+    const {items} = this.props;
+    const endFakeItemsNumber = this.getEndFakeItemsNumber();
+    return items.slice(0, endFakeItemsNumber);
+  }
+
+  cloneSlides() {
+    const {items} = this.props;
+    return this.getPrependedSlides()
+      .concat(items)
+      .concat(this.getAppendedSlides());
+  }
+
   handleClickCapture = (e) => {
     if (this.isDragging()) {
       e.preventDefault();
       e.stopPropagation();
-
-      if (e.nativeEvent) {
-        e.nativeEvent.stopPropagation();
-      }
     }
   };
 
@@ -327,36 +438,6 @@ class Frame extends Component {
 
     this.moveEnd(endPoint);
   };
-
-  render() {
-    const {changePage, nextPage, previousPage, render} = this.props;
-
-    const position = this.getPosition();
-    const fullWidth = this.getFullWidth();
-    const isMoving = this.isDragAllowed();
-
-    const containerHandlers = {
-      onTouchStart: this.handleTouchStart,
-      onTouchEnd: this.handleTouchEnd,
-      onTouchMove: this.handleTouchMove,
-      onMouseDown: this.handleMouseDown,
-      onMouseUp: this.handleMouseUp,
-      onMouseLeave: this.handleMouseLeave,
-      onMouseMove: this.handleMouseMove,
-      onClickCapture: this.handleClickCapture,
-      onDragStart: this.handleDragStart,
-    };
-
-    return render({
-      position,
-      fullWidth,
-      isMoving,
-      changePage,
-      nextPage,
-      previousPage,
-      containerHandlers,
-    });
-  }
 }
 
 export default Frame;

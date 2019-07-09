@@ -1,6 +1,4 @@
 .Carousel {
-  max-width: 600px;
-  margin: 0 auto;
   border: 4px solid #efefef;
   overflow: hidden;
   padding-top: 4px
@@ -14,38 +12,6 @@
   color: #fff;
   border-left: 4px solid #fff;
   border-right: 4px solid #fff;
-}
-
-.Carousel-slide:nth-child(8n + 1) {
-  background-color: #ec407a;
-}
-
-.Carousel-slide:nth-child(8n + 2) {
-  background-color: #ab47bc;
-}
-
-.Carousel-slide:nth-child(8n + 3) {
-  background-color: #7e57c2;
-}
-
-.Carousel-slide:nth-child(8n + 4) {
-  background-color: #5c6bc0;
-}
-
-.Carousel-slide:nth-child(8n + 5) {
-  background-color: #29b6f6;
-}
-
-.Carousel-slide:nth-child(8n + 6) {
-  background-color: #26a69a;
-}
-
-.Carousel-slide:nth-child(8n + 7) {
-  background-color: #d4e157;
-}
-
-.Carousel-slide:nth-child(8n) {
-  background-color: #ef5350;
 }
 
 .Carousel-controls {

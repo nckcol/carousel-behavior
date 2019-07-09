@@ -24,23 +24,29 @@ class CarouselBehavior extends Component {
     onInit: () => {},
     onPageChange: false,
     containerWidth: 0,
+    /** A single function-child that receives the individual item and return a functional component (item => props => view) */
+    // constructSlide: (item) => (props) => React.Node
   };
 
   state = {
     currentPage: this.props.initialPage || 0,
+    draft: true,
   };
 
   render() {
-    const {slidesCount, slidesPerPage, containerWidth, render} = this.props;
-    const { currentPage } = this.state;
+    const {slidesPerPage, containerWidth, items, render, infinite} = this.props;
+    const {currentPage, draft} = this.state;
 
     return (
       <Frame
-        slidesCount={slidesCount}
+        slidesCount={items.length}
+        slidesPerPage={slidesPerPage}
         containerWidth={containerWidth}
         currentPage={currentPage}
-        slidesPerPage={slidesPerPage}
         render={render}
+        infinite={infinite}
+        items={items}
+        draft={draft}
         changePage={this.changePage}
         nextPage={this.nextPage}
         previousPage={this.previousPage}
@@ -49,30 +55,94 @@ class CarouselBehavior extends Component {
     );
   }
 
-  changePage = (number) => {
-    const {slidesPerPage, slidesCount, onChange} = this.props;
-
-    const currentPage = normalizePage(number, slidesCount - slidesPerPage);
-
-    this.setState({
-      currentPage,
-    });
-
-    if (typeof onChange === 'function') {
-      onPageChange(currentPage);
+  componentDidUpdate(prevProps) {
+    if (this.props.containerWidth !== prevProps.containerWidth) {
+      // use setTimeout or rAF to return control to browser to render elements properly
+      window.requestAnimationFrame(() =>
+        this.setState({
+          draft: false,
+        })
+      );
     }
   }
 
+  changePage = (currentPage) => {
+    window.requestAnimationFrame(() => {
+      this.setState(
+        {
+          currentPage,
+          draft: false,
+        },
+        () => {
+          if (typeof onChange === 'function') {
+            onPageChange(currentPage);
+          }
+        }
+      );
+    });
+  };
+
   nextPage = () => {
+    const {items, infinite, slidesPerPage} = this.props;
+    const slidesCount = items.length;
+    const prevPage = this.state.currentPage;
+
+    if (!infinite) {
+      this.changePage(normalizePage(prevPage + 1, slidesCount - slidesPerPage));
+      return;
+    }
+
+    if (prevPage < 0 || prevPage > slidesCount - 1) {
+      const currentPage = (prevPage + slidesCount) % slidesCount;
+
+      this.setState(
+        {
+          currentPage,
+          draft: true,
+        },
+        () => {
+          window.requestAnimationFrame(() => this.changePage(this.state.currentPage + 1));
+        }
+      );
+      return;
+    }
+
     this.changePage(this.state.currentPage + 1);
-  }
+  };
 
   previousPage = () => {
+    const {items, infinite, slidesPerPage} = this.props;
+    const slidesCount = items.length;
+    const prevPage = this.state.currentPage;
+
+    if (!infinite) {
+      this.changePage(normalizePage(prevPage - 1, slidesCount - slidesPerPage));
+      return;
+    }
+
+    if (prevPage < 0 || prevPage > slidesCount) {
+      this.setState(
+        {
+          currentPage: (prevPage + slidesCount) % slidesCount,
+          draft: true,
+        },
+        () => {
+          window.requestAnimationFrame(() => this.changePage(this.state.currentPage - 1));
+        }
+      );
+      return;
+    }
+
     this.changePage(this.state.currentPage - 1);
-  }
+  };
 
   handlePageChange = (page) => {
-    this.changePage(page);
+    const {items, infinite, slidesPerPage} = this.props;
+    const slidesCount = items.length;
+    const currentPage = infinite
+      ? (page + slidesCount) % slidesCount
+      : normalizePage(page, slidesCount - slidesPerPage);
+    this.changePage(currentPage);
   };
 }
 
