@@ -8,9 +8,11 @@
 
 ## Features
 
-- support touch events
-- ready for server-side rendering
+- small size
+- optimized rendering
+- ready for server-side
 - zero dependency
+- support touch events
 
 ## Examples
 
