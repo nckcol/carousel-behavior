@@ -13,6 +13,12 @@
 - [basic](/examples/default)
 - [with react spring](/examples/react-spring)
 
+## Installation
+
+```sh
+> npm install carousel-behavior
+```
+
 ## Inspired by
 
 - [formik](https://github.com/jaredpalmer/formik) - Build forms in React, without the tears 😭
