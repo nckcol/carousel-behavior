@@ -3,10 +3,16 @@
   "version": "0.2.0",
   "description": "React component that takes care of carousel behavior and uses UI that you define",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rimraf esm",
     "build": "rollup -c",
-    "watch": "rollup -cw"
+    "watch": "rollup -cw",
+    "prepublish": "npm run clean && npm run build"
   },
+  "module": "./esm/index.mjs",
+  "files": [
+    "esm",
+    "src"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nckcol/carousel-behavior.git"
@@ -36,6 +42,7 @@
     "@babel/preset-env": "^7.5.0",
     "@babel/preset-react": "^7.0.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+    "rimraf": "^2.6.3",
     "rollup": "^1.16.6",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-size-snapshot": "^0.9.0",
