@@ -32,7 +32,7 @@ function getCursorStyle(isMoving) {
   return isMoving ? '-webkit-grabbing' : '-webkit-grab';
 }
 
-function getContainerStyles({position, draft, fullWidth, isMoving}) {
+function getContainerStyle({position, draft, fullWidth, isMoving}) {
   const transform = getTransformStyle(position);
   const transition = getTransitionStyle(!draft && !isMoving);
   const cursor = getCursorStyle(isMoving);
@@ -87,7 +87,7 @@ class Carousel extends Component {
           nextPage,
           previousPage,
         }) => {
-          const containerStyle = getContainerStyles({
+          const containerStyle = getContainerStyle({
             draft,
             position,
             fullWidth,
@@ -145,10 +145,6 @@ class Carousel extends Component {
       containerWidth,
     });
   }
-
-  handleResize = ({bounds}) => {
-    this.setState({width: bounds.width});
-  };
 }
 
 export default Carousel;
