@@ -24,8 +24,6 @@ class CarouselBehavior extends Component {
     onInit: () => {},
     onPageChange: false,
     containerWidth: 0,
-    /** A single function-child that receives the individual item and return a functional component (item => props => view) */
-    // constructSlide: (item) => (props) => React.Node
   };
 
   state = {
@@ -34,15 +32,25 @@ class CarouselBehavior extends Component {
   };
 
   render() {
-    const {slidesPerPage, containerWidth, items, render, infinite} = this.props;
+    const {
+      slidesPerPage,
+      containerWidth,
+      items,
+      render,
+      component,
+      infinite,
+      ...customProps
+    } = this.props;
     const {currentPage, draft} = this.state;
 
     return (
       <Frame
+        {...customProps}
         slidesCount={items.length}
         slidesPerPage={slidesPerPage}
         containerWidth={containerWidth}
         currentPage={currentPage}
+        component={component}
         render={render}
         infinite={infinite}
         items={items}

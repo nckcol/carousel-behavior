@@ -44,9 +44,18 @@ class Frame extends Component {
     dragging: false,
   };
 
-
   render() {
-    const {currentPage, changePage, nextPage, previousPage, render, draft, slidesCount} = this.props;
+    const {
+      currentPage,
+      changePage,
+      nextPage,
+      previousPage,
+      render,
+      component,
+      draft,
+      slidesCount,
+      ...customProps
+    } = this.props;
 
     const slides = this.cloneSlides();
     const position = this.getPosition();
@@ -67,7 +76,8 @@ class Frame extends Component {
       onDragStart: this.handleDragStart,
     };
 
-    return render({
+    const props = {
+      ...customProps,
       slides,
       position,
       fullWidth,
@@ -81,7 +91,13 @@ class Frame extends Component {
       previousPage,
       /* handlers */
       containerHandlers,
-    });
+    };
+
+    if (component) {
+      return React.createElement(component, props);
+    }
+
+    return render(props);
   }
 
   componentDidMount() {

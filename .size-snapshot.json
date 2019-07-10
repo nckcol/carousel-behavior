@@ -14,16 +14,16 @@
     }
   },
   "esm/index.js": {
-    "bundled": 14652,
-    "minified": 7411,
-    "gzipped": 2287,
+    "bundled": 15255,
+    "minified": 7945,
+    "gzipped": 2471,
     "treeshaked": {
       "rollup": {
-        "code": 66,
-        "import_statements": 14
+        "code": 173,
+        "import_statements": 121
       },
       "webpack": {
-        "code": 7892
+        "code": 8401
       }
     }
   }
