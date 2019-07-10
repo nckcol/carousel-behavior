@@ -1,6 +1,6 @@
 {
   "name": "carousel-behavior",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "React component that takes care of carousel behavior and uses UI that you define",
   "scripts": {
     "clean": "rimraf esm",
