@@ -2,8 +2,8 @@
 
 ⚠️ **work in progress**
 
-[![npm version](https://badgen.net/npm/v/carousel-behavior)](https://www.npmjs.com/package/@behavior/carousel)
-[![gzip size](https://img.badgesize.io/https://unpkg.com/carousel-behavior@0.2.1/esm/index.mjs?compression=gzip)](https://unpkg.com/@behavior/carousel@0.2.1/esm/index.mjs)
+[![npm version](https://badgen.net/npm/v/@behavior/carousel)](https://www.npmjs.com/package/@behavior/carousel)
+[![gzip size](https://img.badgesize.io/https://unpkg.com/@behavior/carousel@1.0.0/esm/index.mjs?compression=gzip)](https://unpkg.com/@behavior/carousel@1.0.0/esm/index.mjs)
 [![MIT](https://badgen.net/github/license/nckcol/carousel-behavior)](./LICENCE)
 
 ## Features
