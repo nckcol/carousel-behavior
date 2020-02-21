@@ -1,6 +1,6 @@
 {
-  "name": "carousel-behavior",
-  "version": "0.2.2",
+  "name": "@behavior/carousel",
+  "version": "1.0.0",
   "description": "React component that takes care of carousel behavior and uses UI that you define",
   "scripts": {
     "clean": "rimraf esm",
@@ -8,7 +8,11 @@
     "watch": "rollup -cw",
     "prepublish": "npm run clean && npm run build"
   },
-  "module": "./esm/index.mjs",
+  "module": "esm/index.mjs",
+  "main": "esm/index.mjs",
+  "directories": {
+    "example": "examples"
+  },
   "files": [
     "esm",
     "src"
@@ -51,5 +55,5 @@
   "dependencies": {
     "@babel/runtime": "^7.5.1",
     "react": "^16.8.6"
-  }
+  },
 }
